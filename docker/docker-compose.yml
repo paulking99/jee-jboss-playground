@@ -1,0 +1,13 @@
+# Reference: https://docs.docker.com/compose/compose-file/compose-file-v2
+services:
+  wildfly:
+    build:
+      context: ./jboss
+    ports:
+    # HOST:CONTAINER
+    # Note that the default container ports are prefixed with 1 for local ports to prevent clashes with existing jboss containers.
+    - 19999:9999
+    - 19990:9990
+    - 18080:8080
+    - 18787:8787
+version: '2'
