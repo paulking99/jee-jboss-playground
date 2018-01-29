@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * A series of tests to show jee transactions at work.
+ * A series of tests to show jee tran at work.
  * See full rules at: http://docs.oracle.com/javaee/6/tutorial/doc/bncij.html
  * <p>
  * Each Unit test tests a JEE transaction rule.
@@ -42,7 +42,7 @@ public class TransactionsIT {
                    .addClass(Format.class)
                    .addClass(Status.class)
                    .addClass(TransactionUtil.class);
-        //.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                   //.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Inject
@@ -187,7 +187,7 @@ public class TransactionsIT {
      */
     @Test(expected = EJBTransactionRequiredException.class)
     public void cdiBeanToEjbWithTransactionAttributeMandatory() {
-        final Map<String, String> transactions = cdiBean.toEjbWithTransactionAttributeMandatory();
+        cdiBean.toEjbWithTransactionAttributeMandatory();
     }
 
     /**
@@ -216,6 +216,7 @@ public class TransactionsIT {
         assertNotEquals("Transactions should not be the same.", getTransactionId(0, transactions), getTransactionId(1, transactions));
     }
 
+
     /**
      * Test TransactionAttribute.NOT_SUPPORTED when the client is not in a transaction.
      * <p>
@@ -233,6 +234,7 @@ public class TransactionsIT {
     @Test(expected = EJBTransactionRequiredException.class)
     public void cdiBeanToEjbWithTransactionAttributeNotSupported() {
         final Map<String, String> transactions = cdiBean.toEjbWithTransactionAttributeMandatory();
+        //TODO
     }
 
     /*

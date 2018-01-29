@@ -14,13 +14,13 @@ http://jboss.org/schema/arquillian ">
     <container qualifier="widlfly-remote" default="true">
         <configuration>
             <property name="managementAddress">127.0.0.1</property>
-            <property name="managementPort">19990</property>
+            <property name="managementPort">9990</property>
             <property name="username">admin</property>
             <property name="password">passw0rd</property>
         </configuration>
         <protocol type="Servlet 3.0">
             <property name="host">127.0.0.1</property>
-            <property name="port">18080</property>
+            <property name="port">8080</property>
         </protocol>
     </container>
 

@@ -32,7 +32,6 @@
             <artifactId>wildfly-arquillian-container-remote</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.arquillian.protocol</groupId>
             <artifactId>arquillian-protocol-servlet</artifactId>
@@ -48,11 +47,64 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <!-- https://github.com/fabric8io/docker-maven-plugin/blob/master/README.md -->
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>jee-jboss-playground:transactions</name>
+                            <alias>transactions</alias>
+                            <build>
+                                <dockerFileDir>${project.basedir}/src/main/docker</dockerFileDir>
+                            </build>
+                            <run>
+                                <wait>
+                                    <!-- wait 10 seconds for a positive reply from wildfly http port -->
+                                    <http>
+                                        <url>http://localhost:8080</url>
+                                    </http>
+                                    <time>10000</time>
+                                </wait>
+                                <ports>
+                                    <!-- HOST:CONTAINER -->
+                                    <port>9999:9999</port>
+                                    <port>9990:9990</port>
+                                    <port>8787:8787</port>
+                                    <port>8080:8080</port>
+                                </ports>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+
+                <!-- Enable executions to automatically build, start, stop and remove the container when executing the tests using 'mvn verify'. -->
+                <!--<executions>
+                    <execution>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>-->
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

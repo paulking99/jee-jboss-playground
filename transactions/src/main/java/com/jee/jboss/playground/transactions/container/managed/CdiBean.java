@@ -14,7 +14,8 @@ import javax.transaction.TransactionSynchronizationRegistry;
 @Dependent
 public class CdiBean {
 
-    @Resource
+    //Note: in the Cdi bean we have to specify the resource name, in the Ejb we do not.
+    @Resource(name = "java:comp/TransactionSynchronizationRegistry")
     private TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
     @Inject

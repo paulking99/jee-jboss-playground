@@ -1,38 +1,17 @@
 package com.jee.jboss.playground.transactions.container.managed;
 
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.ejb.Timeout;
-import javax.ejb.Timer;
-import javax.ejb.TimerConfig;
-import javax.ejb.TimerService;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.transaction.TransactionSynchronizationRegistry;
-import org.slf4j.Logger;
 
 @Stateless
 public class EJBTx2 {
 
     @Resource
     private TransactionSynchronizationRegistry transactionSynchronizationRegistry;
-
-    @Resource
-    private EJBContext context;
-
-    @Inject
-    EJBTx3 ejbTx3;
-
-    @Inject
-    Logger logger;
-
-    @Resource
-    private TimerService timerService;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Map<String, String> doMethodWithTransactionAttributeRequired(final Map<String, String> transactions) {

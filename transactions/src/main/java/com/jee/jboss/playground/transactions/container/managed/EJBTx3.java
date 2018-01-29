@@ -2,7 +2,6 @@ package com.jee.jboss.playground.transactions.container.managed;
 
 import java.util.List;
 import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;

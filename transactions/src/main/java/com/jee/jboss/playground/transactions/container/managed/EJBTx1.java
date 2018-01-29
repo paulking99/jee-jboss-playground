@@ -3,11 +3,9 @@ package com.jee.jboss.playground.transactions.container.managed;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Resource;
-import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.TransactionSynchronizationRegistry;
-import org.slf4j.Logger;
 
 /**
  * Bean has container-managed transactions by default.
@@ -20,14 +18,8 @@ public class EJBTx1 {
     @Resource
     private TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
-    @Resource
-    private EJBContext context;
-
     @Inject
     EJBTx2 ejbTx2;
-
-    @Inject
-    Logger logger;
 
     public Map<String, String> toSelfOnly() {
         Map<String, String> transactions = new LinkedHashMap<>();
