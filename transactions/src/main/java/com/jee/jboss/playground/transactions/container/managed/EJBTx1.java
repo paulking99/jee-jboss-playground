@@ -1,9 +1,12 @@
 package com.jee.jboss.playground.transactions.container.managed;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.transaction.TransactionSynchronizationRegistry;
 
@@ -21,42 +24,75 @@ public class EJBTx1 {
     @Inject
     EJBTx2 ejbTx2;
 
-    public Map<String, String> toSelfOnly() {
-        Map<String, String> transactions = new LinkedHashMap<>();
-        transactions.put(this.getClass().getSimpleName(), getTransactionId());
-        return transactions;
+    public LinkedList<String> toSelfOnly(LinkedList<String> transactions) {
+        return setTransactionId("toSelfOnly", transactions);
     }
 
-    public Map<String, String> toOtherEjbWithTransactionAttributeRequired() {
-        Map<String, String> transactions = new LinkedHashMap<>();
-        transactions.put(this.getClass().getSimpleName(), getTransactionId());
+    public LinkedList<String> toSelfPublicMethodWithTransactionAttributeRequiresNew(final LinkedList<String> transactions) {
+        setTransactionId("toSelfPublicMethodWithTransactionAttributeRequiresNew", transactions);
+        return doPublicMethodWithTransactionAttributeRequiresNew(transactions);
+    }
+
+    public LinkedList<String> toSelfPrivateMethodWithTransactionAttributeRequiresNew(final LinkedList<String> transactions) {
+        setTransactionId("toSelfPrivateMethodWithTransactionAttributeRequiresNew", transactions);
+        return this.doPrivateMethodWithTransactionAttributeRequiresNew(transactions);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public LinkedList<String> doPublicMethodWithTransactionAttributeRequiresNew(final LinkedList<String> transactions) {
+        return setTransactionId("doPublicMethodWithTransactionAttributeRequiresNew", transactions);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private LinkedList<String> doPrivateMethodWithTransactionAttributeRequiresNew(final LinkedList<String> transactions) {
+        return setTransactionId("doPrivateMethodWithTransactionAttributeRequiresNew", transactions);
+    }
+
+    public LinkedList<String> toOtherEjbWithTransactionAttributeRequired(final LinkedList<String> transactions) {
+        setTransactionId("toOtherEjbWithTransactionAttributeRequired", transactions);
         return ejbTx2.doMethodWithTransactionAttributeRequired(transactions);
     }
 
-    public Map<String, String> toOtherEjbWithTransactionAttributeRequiresNew() {
-        Map<String, String> transactions = new LinkedHashMap<>();
-        transactions.put(this.getClass().getSimpleName(), getTransactionId());
+    public LinkedList<String> toOtherEjbWithTransactionAttributeRequiresNew(final LinkedList<String> transactions) {
+        setTransactionId("toOtherEjbWithTransactionAttributeRequiresNew", transactions);
         return ejbTx2.doMethodWithTransactionAttributeRequiresNew(transactions);
     }
 
-    public Map<String, String> toOtherEjbWithTransactionAttributeMandatory() {
-        Map<String, String> transactions = new LinkedHashMap<>();
-        transactions.put(this.getClass().getSimpleName(), getTransactionId());
+    public LinkedList<String> toOtherEjbWithTransactionAttributeMandatory(final LinkedList<String> transactions) {
+        setTransactionId("toOtherEjbWithTransactionAttributeMandatory", transactions);
         return ejbTx2.doMethodWithTransactionAttributeMandatory(transactions);
     }
 
-    public Map<String, String> toOtherEjbWithTransactionAttributeNotSupported() {
-        Map<String, String> transactions = new LinkedHashMap<>();
-        transactions.put(this.getClass().getSimpleName(), getTransactionId());
+    public LinkedList<String> toOtherEjbWithTransactionAttributeNotSupported(final LinkedList<String> transactions) {
+        setTransactionId("toOtherEjbWithTransactionAttributeNotSupported", transactions);
         return ejbTx2.doMethodWithTransactionAttributeNotSupported(transactions);
     }
 
-    private String getTransactionId() {
+    public LinkedList<String> toOtherEjbWithTransactionAttributeSupports(final LinkedList<String> transactions) {
+        setTransactionId("toOtherEjbWithTransactionAttributeSupports", transactions);
+        return ejbTx2.doMethodWithTransactionAttributeSupports(transactions);
+    }
+
+    public LinkedList<String> toOtherEjbWithTransactionAttributeNever(final LinkedList<String> transactions) {
+        setTransactionId("toOtherEjbWithTransactionAttributeNever", transactions);
+        return ejbTx2.doMethodWithTransactionAttributeNever(transactions);
+    }
+
+    /*
+     * PRIVATE METHODS
+     */
+
+    private String getTransactionId(){
         return transactionSynchronizationRegistry.getTransactionKey() == null
                    ? "null" : transactionSynchronizationRegistry.getTransactionKey().toString();
     }
 
-    private String getTransactionStatus() {
+    private LinkedList<String> setTransactionId(final String methodName, final LinkedList<String> transactions){
+        transactions.add(String.format("%s : %s : %s", this.getClass().getSimpleName(), methodName, getTransactionId()));
+        return transactions;
+    }
+
+    private String getTransactionStatus(){
         return Status.toString(transactionSynchronizationRegistry.getTransactionStatus());
     }
 

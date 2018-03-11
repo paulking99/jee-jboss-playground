@@ -50,6 +50,29 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <!-- https://github.com/fabric8io/docker-maven-plugin/blob/master/README.md -->
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <images>
+                        <image>
+                            <alias>wildfly</alias>
+                            <name>jee-jboss-playground:concurrency</name>
+                            <!-- Note: limitation of docker-maven-plugin (see: https://dmp.fabric8.io/#limitations)
+                                 "Only services are currently evaluated, there is no supported yet for volumes and networks." -->
+                            <external>
+                                <type>compose</type>
+                                <basedir>${project.basedir}/src/main/docker</basedir>
+                                <composeFile>docker-compose.yml</composeFile>
+                                <ignoreBuild>false</ignoreBuild>
+                            </external>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

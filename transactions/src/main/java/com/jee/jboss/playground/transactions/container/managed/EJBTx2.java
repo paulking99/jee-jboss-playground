@@ -1,6 +1,7 @@
 package com.jee.jboss.playground.transactions.container.managed;
 
-import java.util.Map;
+import java.util.LinkedList;
+
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -14,33 +15,33 @@ public class EJBTx2 {
     private TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Map<String, String> doMethodWithTransactionAttributeRequired(final Map<String, String> transactions) {
-        return setTransactionId(transactions);
+    public LinkedList<String> doMethodWithTransactionAttributeRequired(final LinkedList<String> transactions) {
+        return setTransactionId("doMethodWithTransactionAttributeRequired", transactions);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Map<String, String> doMethodWithTransactionAttributeRequiresNew(final Map<String, String> transactions) {
-        return setTransactionId(transactions);
+    public LinkedList<String> doMethodWithTransactionAttributeRequiresNew(final LinkedList<String> transactions) {
+        return setTransactionId("doMethodWithTransactionAttributeRequiresNew", transactions);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    public Map<String, String> doMethodWithTransactionAttributeMandatory(final Map<String, String> transactions) {
-        return setTransactionId(transactions);
+    public LinkedList<String> doMethodWithTransactionAttributeMandatory(final LinkedList<String> transactions) {
+        return setTransactionId("doMethodWithTransactionAttributeMandatory", transactions);
     }
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public Map<String, String> doMethodWithTransactionAttributeNotSupported(final Map<String, String> transactions) {
-        return setTransactionId(transactions);
+    public LinkedList<String> doMethodWithTransactionAttributeNotSupported(final LinkedList<String> transactions) {
+        return setTransactionId("doMethodWithTransactionAttributeNotSupported", transactions);
     }
 
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public Map<String, String> doMethodWithTransactionAttributeSupports(final Map<String, String> transactions) {
-        return setTransactionId(transactions);
+    public LinkedList<String> doMethodWithTransactionAttributeSupports(final LinkedList<String> transactions) {
+        return setTransactionId("doMethodWithTransactionAttributeSupports", transactions);
     }
 
     @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Map<String, String> doMethodWithTransactionAttributeNever(final Map<String, String> transactions) {
-        return setTransactionId(transactions);
+    public LinkedList<String> doMethodWithTransactionAttributeNever(final LinkedList<String> transactions) {
+        return setTransactionId("doMethodWithTransactionAttributeNever", transactions);
     }
 
     /*
@@ -52,12 +53,13 @@ public class EJBTx2 {
                    ? "null" : transactionSynchronizationRegistry.getTransactionKey().toString();
     }
 
+    private LinkedList<String> setTransactionId(final String methodName, final LinkedList<String> transactions){
+        transactions.add(String.format("%s : %s : %s", this.getClass().getSimpleName(), methodName, getTransactionId()));
+        return transactions;
+    }
+
     private String getTransactionStatus(){
         return Status.toString(transactionSynchronizationRegistry.getTransactionStatus());
     }
 
-    private Map<String, String> setTransactionId(final Map<String, String> transactions){
-        transactions.put(this.getClass().getSimpleName(), getTransactionId());
-        return transactions;
-    }
 }
